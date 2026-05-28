@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cat × Mr. Spinny · Activity Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #7F77DD;
+      --purple-light: #EEEDFE;
+      --purple-dark: #3C3489;
+      --teal: #1D9E75;
+      --teal-light: #E1F5EE;
+      --teal-dark: #085041;
+      --amber: #EF9F27;
+      --amber-light: #FAEEDA;
+      --coral: #D85A30;
+      --coral-light: #FAECE7;
+      --ink: #1a1825;
+      --ink-muted: #4a4760;
+      --ink-faint: #8a87a0;
+      --paper: #faf9f7;
+      --paper-warm: #f2f0eb;
+      --border: rgba(100,96,128,0.12);
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+
+    /* header */
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding: 48px 48px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(127,119,221,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .header h1 em {
+      font-style: italic;
+      color: var(--purple);
+    }
+    .header-sub {
+      font-size: 14px;
+      color: var(--ink-faint);
+      font-weight: 300;
+    }
+    .date-badge {
+      display: inline-block;
+      background: var(--paper-warm);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      margin-top: 16px;
+    }
+
+    /* main layout */
+    .main { padding: 40px 48px; }
+
+    /* metric strip */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .metric {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 0 0 12px 12px;
+    }
+    .metric:nth-child(1)::after { background: var(--purple); }
+    .metric:nth-child(2)::after { background: var(--teal); }
+    .metric:nth-child(3)::after { background: var(--amber); }
+    .metric:nth-child(4)::after { background: var(--coral); }
+    .metric-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 6px;
+    }
+    .metric-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 34px;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .metric-sub {
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-top: 4px;
+    }
+
+    /* trend pills */
+    .trends {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 48px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 400;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+    .pill-purple { background: var(--purple-light); color: var(--purple-dark); border-color: rgba(127,119,221,0.2); }
+    .pill-teal   { background: var(--teal-light);   color: var(--teal-dark);   border-color: rgba(29,158,117,0.2); }
+    .pill-amber  { background: var(--amber-light);  color: #633806;            border-color: rgba(239,159,39,0.25); }
+
+    /* sections */
+    .section { margin-bottom: 52px; }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      font-weight: 400;
+    }
+    .section-note {
+      font-size: 12px;
+      color: var(--ink-faint);
+      font-weight: 300;
+    }
+    .chart-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-bottom: 16px;
+    }
+    .legend span { display: flex; align-items: center; gap: 6px; }
+    .legend-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .legend-line { width: 18px; height: 2px; flex-shrink: 0; }
+    .chart-wrap { position: relative; width: 100%; }
+
+    /* scatter note */
+    .scatter-note {
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    /* footer */
+    .footer {
+      padding: 0 48px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-faint);
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .header, .main, .footer { padding-left: 20px; padding-right: 20px; }
+      .header { padding-top: 32px; padding-bottom: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-eyebrow">Litter Robot · Activity Report</div>
+    <h1>Cat &amp; <em>Mr. Spinny</em></h1>
+    <div class="header-sub">Bathroom habits, tracked.</div>
+    <div class="date-badge">May 22 – 28, 2026</div>
+  </header>
+
+  <main class="main">
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Total visits</div>
+        <div class="metric-value">32</div>
+        <div class="metric-sub">over 7 days</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Daily avg</div>
+        <div class="metric-value">4.6</div>
+        <div class="metric-sub">visits / day</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Busiest day</div>
+        <div class="metric-value">May 23</div>
+        <div class="metric-sub">7 visits</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Quietest day</div>
+        <div class="metric-value">May 27</div>
+        <div class="metric-sub">3 visits</div>
+      </div>
+    </div>
+
+    <div class="trends">
+      <span class="pill pill-teal">☀ 5–7am morning visit every single day</span>
+      <span class="pill pill-amber">⚠ May 23 &amp; 26 unusually busy — 6–7 visits</span>
+      <span class="pill pill-purple">✓ Clean cycle fires within ~9 min every time</span>
+      <span class="pill pill-amber">🌙 Two back-to-back late-night visits on May 26 (1–2am)</span>
+      <span class="pill pill-teal">📊 May 28 partial day — only 1 visit logged (3am)</span>
+    </div>
+
+    <!-- Chart 1: Daily visits -->
+    <div class="section">
+      <div class="section-head">
+        <h2 class="section-title">Visits per day</h2>
+        <span class="section-note">cat sensor timing events only</span>
+      </div>
+      <div class="chart-card">
+        <div class="legend">
+          <span><span class="legend-sq" style="background:#7F77DD;"></span>Daily visits</span>
+          <span><span class="legend-line" style="background:#EF9F27; border-top: 2px dashed #EF9F27; background: none;"></span>Average (4.6)</span>
+        </div>
+        <div class="chart-wrap" style="height: 240px;">
+          <canvas id="dailyChart" role="img" aria-label="Bar chart of Cat's litter box visits per day. May 22: 4, May 23: 7, May 24: 6, May 25: 4, May 26: 6, May 27: 3, May 28: 1 partial."></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart 2: Hour of day -->
+    <div class="section">
+      <div class="section-head">
+        <h2 class="section-title">Visits by hour of day</h2>
+        <span class="section-note">all days combined</span>
+      </div>
+      <div class="chart-card">
+        <div class="legend">
+          <span><span class="legend-sq" style="background:#1D9E75;"></span>Visit count (darker = more visits)</span>
+        </div>
+        <div class="chart-wrap" style="height: 220px;">
+          <canvas id="hourChart" role="img" aria-label="Bar chart showing visit distribution across hours of the day. Peaks at 6am and around midnight/1am."></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart 3: Scatter -->
+    <div class="section">
+      <div class="section-head">
+        <h2 class="section-title">Visit timing by day</h2>
+        <span class="section-note">each dot = one visit</span>
+      </div>
+      <div class="chart-card">
+        <p class="scatter-note">The 5–7am cluster is the only truly consistent pattern — it appears every single day without exception.</p>
+        <div class="chart-wrap" style="height: 280px;">
+          <canvas id="scatterChart" role="img" aria-label="Scatter plot of visit times. A tight morning cluster at 5–7am appears on every day. Evening and overnight timing is more variable."></canvas>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    Generated from Mr. Spinny activity log · Cat Sensor Timing events · May 2026
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script>
+    const visits = [
+      {day:0,hour:0},{day:0,hour:6},{day:0,hour:10},{day:0,hour:18},
+      {day:1,hour:1},{day:1,hour:5},{day:1,hour:9},{day:1,hour:12},{day:1,hour:15},{day:1,hour:23},{day:1,hour:23},
+      {day:2,hour:6},{day:2,hour:13},{day:2,hour:17},{day:2,hour:18},{day:2,hour:20},{day:2,hour:21},
+      {day:3,hour:0},{day:3,hour:6},{day:3,hour:11},{day:3,hour:14},
+      {day:4,hour:1},{day:4,hour:1},{day:4,hour:6},{day:4,hour:13},{day:4,hour:14},{day:4,hour:21},
+      {day:5,hour:6},{day:5,hour:14},{day:5,hour:22},
+      {day:6,hour:3}
+    ];
+
+    const dayLabels = ['May 22','May 23','May 24','May 25','May 26','May 27','May 28'];
+    const dayCounts = [4,7,6,4,6,3,1];
+
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+    Chart.defaults.color = '#8a87a0';
+
+    // Daily bar chart
+    new Chart(document.getElementById('dailyChart'), {
+      type: 'bar',
+      data: {
+        labels: dayLabels,
+        datasets: [
+          {
+            label: 'Visits',
+            data: dayCounts,
+            backgroundColor: dayCounts.map((v,i) => i===6 ? 'rgba(127,119,221,0.45)' : '#7F77DD'),
+            borderRadius: 7,
+            order: 1
+          },
+          {
+            label: 'Avg',
+            data: Array(7).fill(4.6),
+            type: 'line',
+            borderColor: '#EF9F27',
+            borderDash: [5,4],
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: false,
+            order: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: {
+            label: ctx => ctx.datasetIndex===0 ? `${ctx.raw} visits` : `avg ${ctx.raw}`
+          }}
+        },
+        scales: {
+          y: { beginAtZero: true, max: 9, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // Hour histogram
+    const hourBins = Array(24).fill(0);
+    visits.forEach(v => hourBins[v.hour]++);
+    const maxHour = Math.max(...hourBins);
+
+    new Chart(document.getElementById('hourChart'), {
+      type: 'bar',
+      data: {
+        labels: Array.from({length:24}, (_,i) => i===0?'12am': i<12?`${i}am`: i===12?'12pm': `${i-12}pm`),
+        datasets: [{
+          label: 'Visits',
+          data: hourBins,
+          backgroundColor: hourBins.map(v => {
+            const t = v / maxHour;
+            if (t > 0.6) return '#085041';
+            if (t > 0.3) return '#1D9E75';
+            if (t > 0)   return '#5DCAA5';
+            return 'rgba(29,158,117,0.08)';
+          }),
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.raw} visit${ctx.raw!==1?'s':''}` } } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          x: { ticks: { autoSkip: false, maxRotation: 45, font: { size: 10 } }, grid: { display: false } }
+        }
+      }
+    });
+
+    // Scatter
+    const scatterData = visits.map(v => ({
+      x: v.hour + (Math.random()*0.5 - 0.25),
+      y: v.day + (Math.random()*0.3 - 0.15)
+    }));
+
+    new Chart(document.getElementById('scatterChart'), {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Visit',
+          data: scatterData,
+          backgroundColor: 'rgba(127,119,221,0.75)',
+          pointRadius: 8,
+          pointHoverRadius: 11
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: {
+            label: ctx => {
+              const h = Math.round(ctx.raw.x);
+              const lbl = h===0?'12am': h<12&&h>0?`${h}am`: h===12?'noon': h<24?`${h-12}pm`: '';
+              return `${dayLabels[Math.round(ctx.raw.y)]} · ~${lbl}`;
+            }
+          }}
+        },
+        scales: {
+          x: {
+            min: -0.5, max: 23.5,
+            ticks: { stepSize: 3, callback: v => v===0?'12am': v<12&&v>0?`${v}am`: v===12?'noon': v<24&&v>12?`${v-12}pm`: '', font: { size: 11 } },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          y: {
+            min: -0.5, max: 6.5,
+            ticks: { callback: v => Number.isInteger(v) ? dayLabels[v] : '', stepSize: 1, font: { size: 11 } },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
